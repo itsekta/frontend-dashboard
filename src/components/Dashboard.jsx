@@ -3,14 +3,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const Dashboard = () => {
-  const [liveData, setLiveData] = useState([]);
+  const [liveData, setLiveData] = useState(null);
   const [historyData, setHistoryData] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchLiveData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/live-data");
+        const response = await axios.get("http://localhost:4001/api/live-data");
         setLiveData(response.data);
       } catch (err) {
         console.error("Error fetching live data:", err);
@@ -21,7 +21,7 @@ const Dashboard = () => {
     const fetchHistoryData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/history-data"
+          "http://localhost:4001/api/history-data"
         );
         setHistoryData(response.data);
       } catch (err) {
@@ -73,15 +73,15 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody className="bg-gray-50 divide-y divide-gray-200">
-              {liveData.length > 0 ? (
-                liveData.map((data, index) => (
-                  <tr key={index}>
-                    <td className="px-6 py-4 text-sm">{data.store_id}</td>
-                    <td className="px-6 py-4 text-sm">{data.customers_in}</td>
-                    <td className="px-6 py-4 text-sm">{data.customers_out}</td>
-                    <td className="px-6 py-4 text-sm">{data.time_stamp}</td>
-                  </tr>
-                ))
+              {liveData ? (
+                <tr>
+                  <td className="px-6 py-4 text-sm">{liveData.store_id}</td>
+                  <td className="px-6 py-4 text-sm">{liveData.customers_in}</td>
+                  <td className="px-6 py-4 text-sm">
+                    {liveData.customers_out}
+                  </td>
+                  <td className="px-6 py-4 text-sm">{liveData.time_stamp}</td>
+                </tr>
               ) : (
                 <tr>
                   <td
@@ -122,7 +122,7 @@ const Dashboard = () => {
               {historyData.length > 0 ? (
                 historyData.map((data, index) => (
                   <tr key={index}>
-                    <td className="px-6 py-4 text-sm">{data.hour}</td>
+                    <td className="px-6 py-4 text-sm">{data.date}</td>
                     <td className="px-6 py-4 text-sm">{data.customers_in}</td>
                     <td className="px-6 py-4 text-sm">{data.customers_out}</td>
                   </tr>
